@@ -3,6 +3,7 @@ import random
 
 #preparation
 wrds = []
+usedChars = []
 for x in range(1,21):
     wrds.append(f"slowko{x}")
 
@@ -13,3 +14,6 @@ for c in pattern:
     screen += '-'
 
 #display
+print("*======================*\n")
+print(screen)
+print(f"Used: {usedChars}")
