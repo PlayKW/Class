@@ -1,8 +1,9 @@
-﻿# Import
+# Import
 from ctypes.wintypes import CHAR
+from operator import contains
 import random
 
-# Preparation
+### Preparation
 wrds = []
 usedChars = []
 for x in range(1,21):
@@ -10,41 +11,68 @@ for x in range(1,21):
 
 pattern = random.choice(wrds)
 label = ""
+tries = 0
 
 for c in pattern:
     label += '-'
 
+# Visual elements
+ftr = "=-------------------------------=\n"
 
-# Game logic
+
+### Game logic
 while label != pattern:
+
+    # Tries iteration
+    tries += 1
 
     # Display
     display = ""
     for c in label:
         display += c + ' '
     
-    print("=-------------------------------=\n")
+    print(ftr)
     print(display)
-    print("Used: ",)
+    print("Used:",usedChars)
 
     # Input
-    char = input("Given letter: ")
+    inp = input("Question: ")
 
     # Letter select
-    selectedAny = False
-    for i in range(0,len(pattern)):
-        if char == pattern[i]:
-
-            # Label index replace
-            s = list(label)
-            s[i] = char
-            label = "".join(s)
-
+    if len(inp) == 1:
+        # Is lettern in a pattern?
+        if inp in pattern:
+            
             # List insert
-            usedChars.append(char)
-            selectedAny = True
+            usedChars.append(inp)
 
-    # Fail message (is any letter selected?)
-    if not selectedAny:
-        print(f"No matches found for letter '{char}'")
+            # Replace loop
+            for i in range(0,len(pattern)):
+                if inp == pattern[i]:
 
+                    # Label index replace
+                    s = list(label)
+                    s[i] = inp
+                    label = "".join(s)
+                
+                    # Is last letter?
+                    if '-' not in s:
+                        break
+
+        # Fail message
+        else:
+            print(f"No matches found for letter '{inp}'")
+    
+    # Word select
+    else:
+        if inp == pattern:
+            break
+        else:
+            print(f"Word {inp} is incorrect! Try again.")
+
+
+### End
+print(ftr)
+print("Congratulations!")
+print(f"The chosen word was {pattern}.")
+print(f"It took you {tries} tries to guess it!")
