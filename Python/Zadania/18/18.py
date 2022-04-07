@@ -15,17 +15,23 @@ key = int(input("Give the key: "))
 for c in inp:
 
     isCap = c.isupper()
-    newC = c.lower()
     # Is any translation?
+    c = c.lower()
     if contains(letterSet,c):
         # Translate - new letter
         for i in range(0, setLen):
             if letterSet[i] == c:
                 index = (i + key) % setLen
-                result += letterSet[index]
+                if isCap:
+                    result += letterSet[index].capitalize()
+                else:
+                    result += letterSet[index]
     # Is no translation?
     else:
-        result += c
+        if isCap:
+            result += c.capitalize()
+        else:
+            result += c
 
 # End output
 print("====================================")
