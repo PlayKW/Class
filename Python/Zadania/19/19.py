@@ -1,10 +1,11 @@
 ﻿# Import
+from operator import contains
 import os
 import string
 
 # Def
 class Account:
-    def __init__(self, name:string, pin:string, value:int):
+    def __init__(self, name:string, pin:string, value:float):
         self.name = name
         self.pin = pin
         self.value = value
@@ -17,20 +18,38 @@ def send(src:Account, dest:Account, value:int):
 
 ### Preparation
 # File read
-mainLoc = os.path.abspath() + '/'
-os.makedirs(mainLoc + "acc")
-files = os.listdir(mainLoc + "acc")
+loc = os.getcwd() + "/Class/Python/Zadania/19/acc.txt"
+file = open(loc)
 
+#L ines detach 
+contents = file.readlines()
+file.close()
 accs = []
-for file in files:
-    obj = open(file)
-    name = obj.read()
-    pin = obj.read()
-    value = obj.read()
-    acc = Account(name, pin, value)
+i = 0
 
-ans = ''
+# Data read
+while i < len(contents):
+    acc = Account(contents[i],contents[i+1],(float)(contents[i+2]))
+    accs.append(acc)
+    i += 3
 
 ### Logic
+# Access
+username = pin = ""
+while True:
+    username = input("Username: ")
+    if contains(contents, username):
+        pin = input("Pin: ")
+    else:
+        print(f"User registered as \"{username}\" dosen't exist!")
+        cmd = input(f"Do you want to register new account?[Y/n]: ")
+        cmd = cmd.lower()
+        # Register
+        if cmd == "y":
+            print(f"Username: {username}")
+            pin = input("Pin: ")
+            nPin = input("Confirm pin: ")
+            if pin == nPin:
+                
 
 
