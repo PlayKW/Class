@@ -2,7 +2,6 @@
 from operator import contains
 import os
 import string
-from telnetlib import DO
 
 # Def
 class Account:
@@ -63,32 +62,58 @@ while i < lineCount:
 # Access
 username = pin = ""
 logged = False
+running = True
 
-while True:
-    username = input("Username: ")
-    if contains(contents, username):
-        pin = input("Pin: ")
-    else:
-        print(f"User registered as \"{username}\" dosen't exist!")
-        cmd = input(f"Do you want to register new account?[Y/n]: ")
-        cmd = cmd.lower()
+while running:
+    # Login
+    while not logged:
+        print("====- Login -====")
+        username = input("Username: ")
+        if contains(contents, username):
+            pin = input("Pin: ")
+                
+        else:
+            print(f"User registered as \"{username}\" dosen't exist!")
+            cmd = input(f"Do you want to register new account?[Y/n] ")
+            cmd = cmd.lower()
 
-        # Register
-        if cmd == "y":
-            while not logged:
-                print(f"Username: {username}")
-                pin = input("Pin: ")
-                nPin = input("Confirm pin: ")
-                if pin == nPin:
-                    accs.append(Account(username, pin, 0))
-                    print(f"New account \"{username}\" created!")
-                    logged = True
-                else:
-                    print("Failed to create an account, repeat: ")
-    
-    # Final login
-    logged = login(username, pin)
-    break
+            # Register
+            if cmd == "y":
+                while not logged:
+                    print(f"Username: {username}")
+                    pin = input("Pin: ")
+                    nPin = input("Confirm pin: ")
+                    if pin == nPin:
+                        accs.append(Account(username, pin, 0))
+                        print(f"New account \"{username}\" created!")
+                        logged = True
+                    else:
+                        print("Failed to create an account!")
+                        cmd = input("Try again?[ /n] ")
+                        cmd = cmd.lower()
+                        if cmd == "n":
+                            cmd = ""
+                            break
+        
+        logged = login(username, pin)
+
+    # Command reading
+    while logged:
+        cmd = input("--> ")
+        if cmd == "logout":
+            logged = False
+        elif cmd == "exit":
+            running = False
+            break
+        elif cmd == "send":
+            address = input(f"From {username} to ")
+            value = float(input("[$]"))
+            for a in accs:
+                if a.name == address:
+                    send(account, a, value)
+                    break
+        else:
+            print(f"Command \'{cmd}\' does not exist!")
 
 lines = []
 for acc in accs:
