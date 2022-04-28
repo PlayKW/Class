@@ -124,10 +124,3 @@ for acc in accs:
 file = open(loc,'a')
 file.writelines(lines)
 file.close()
-
-
-
-            
-                
-
-
