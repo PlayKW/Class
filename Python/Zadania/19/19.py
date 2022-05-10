@@ -24,15 +24,15 @@ def spend(src:Account, value:int):
         src.value -= value
 
 
-def login(name:str,pin:str):
-    for acc in accs:
+def login(name:str,pin:str,accList:list):
+    for acc in accList:
         if name == acc.name and pin == acc.pin:
             account = acc
             print(f"Logged as \"{name}\" ({acc.value})")
             return True
-        else:
-            print("Incorrect username or pin.")
-            return False;
+    
+    print("Incorrect username or pin.")
+    return False
 
 
 ### Preparation
@@ -67,26 +67,31 @@ running = True
 while running:
     # Login
     while not logged:
+
         print("====- Login -====")
         username = input("Username: ")
-        if contains(contents, username):
-            pin = input("Pin: ")
-                
-        else:
+        for acc in accs:
+            if acc.name == username:
+                pin = input("Pin: ")
+                logged = login(username, pin, accs)
+                break
+        
+        if not logged:
             print(f"User registered as \"{username}\" dosen't exist!")
             cmd = input(f"Do you want to register new account?[Y/n] ")
             cmd = cmd.lower()
 
             # Register
             if cmd == "y":
-                while not logged:
+                while True:
                     print(f"Username: {username}")
                     pin = input("Pin: ")
                     nPin = input("Confirm pin: ")
                     if pin == nPin:
                         accs.append(Account(username, pin, 0))
                         print(f"New account \"{username}\" created!")
-                        logged = True
+                        logged = login(username, pin, accs)
+                        break
                     else:
                         print("Failed to create an account!")
                         cmd = input("Try again?[ /n] ")
@@ -94,8 +99,6 @@ while running:
                         if cmd == "n":
                             cmd = ""
                             break
-        
-        logged = login(username, pin)
 
     # Command reading
     while logged:
@@ -115,12 +118,19 @@ while running:
         else:
             print(f"Command \'{cmd}\' does not exist!")
 
-lines = []
-for acc in accs:
-    lines.append(acc.name + "\n")
-    lines.append(acc.pin + "\n")
-    lines.append(str(acc.value) + "\n")
 
-file = open(loc,'a')
+# Final save
+lines = []
+linesAppended = 0
+for acc in accs:
+    if linesAppended == 0:
+        lines.append(acc.name)
+    else:
+        lines.append("\n" + acc.name)
+    lines.append("\n" + acc.pin)
+    lines.append("\n" + str(acc.value))
+    linesAppended += 1
+
+file = open(loc,'w')
 file.writelines(lines)
 file.close()
