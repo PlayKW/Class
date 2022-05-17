@@ -10,16 +10,16 @@ class Account:
         self.pin = pin
         self.value = value
 
-def send(src:Account, dest:Account, value:int):
+def send(src:Account, dest:Account, value:float):
     if value > 0:
         src.value -= value
         dest.value += value
 
-def insert(dest:Account, value:int):
+def insert(dest:Account, value:float):
     if value > 0:
         dest.value += value
 
-def spend(src:Account, value:int):
+def spend(src:Account, value:float):
     if value > 0:
         src.value -= value
 
@@ -28,11 +28,16 @@ def login(name:str,pin:str,accList:list):
     for acc in accList:
         if name == acc.name and pin == acc.pin:
             account = acc
-            print(f"Logged as \"{name}\" ({acc.value})")
+            print(f"Logged as \"{name}\" ({float(acc.value)})")
             return True
     
     print("Incorrect username or pin.")
     return False
+
+def reload(acc:Account):
+    for a in accs:
+        if a.name == account.name:
+            acc = a
 
 
 ### Preparation
@@ -42,17 +47,18 @@ account = Account("","",0)
 accs = []
 
 # File read
-loc = os.getcwd() + "/Class/Python/Zadania/19/acc.txt"
+loc = os.getcwd() + "/Python/Zadania/19/acc.txt"
 file = open(loc)
 contents = file.readlines()
+lines = [l.strip("\n") for l in contents] # Raw text reload
 file.close()
 
 # Data read
 i = 0
-lineCount = len(contents)
+lineCount = len(lines)
 while i < lineCount:
     if lineCount >= 3 and lineCount % 3 == 0:
-        acc = Account(contents[i],contents[i+1],(float)(contents[i+2]))
+        acc = Account(lines[i],lines[i+1],(float)(lines[i+2]))
         accs.append(acc)
         i += 3
     else:
@@ -111,12 +117,37 @@ while running:
         elif cmd == "send":
             address = input(f"From {username} to ")
             value = float(input("[$]"))
+            accExits = False
             for a in accs:
-                if a.name == address:
+                accExits = a.name == address
+                if accExits:
                     send(account, a, value)
+                    print(f"-{value}$")
                     break
+            if not accExits:
+                print(f"Account {address} doesn't exist")
+        elif cmd == "insert":
+            address = input(f"To ")
+            value = float(input("[$]:"))
+            accExits = False
+            for a in accs:
+                accExits = a.name == address
+                if accExits:
+                    psw = input("Confirm operation: ")
+                    if psw == "1@mR0ot":
+                        insert(a, value)
+                        print(f"{address} +{value}$")
+                        break
+                    else:
+                        print("Operation failed - wrong password!")
+                        break
+            if not accExits:
+                print(f"Account {address} doesn't exist")
+        elif cmd == "state":
+            print(f": {account.value}$")
         else:
             print(f"Command \'{cmd}\' does not exist!")
+        reload(account)
 
 
 # Final save
@@ -128,7 +159,7 @@ for acc in accs:
     else:
         lines.append("\n" + acc.name)
     lines.append("\n" + acc.pin)
-    lines.append("\n" + str(acc.value))
+    lines.append("\n" + str(float(acc.value)))
     linesAppended += 1
 
 file = open(loc,'w')
