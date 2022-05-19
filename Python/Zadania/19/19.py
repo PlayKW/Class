@@ -19,11 +19,6 @@ def insert(dest:Account, value:float):
     if value > 0:
         dest.value += value
 
-def spend(src:Account, value:float):
-    if value > 0:
-        src.value -= value
-
-
 def login(name:str,pin:str,accList:list):
     for acc in accList:
         if name == acc.name and pin == acc.pin:
@@ -84,8 +79,7 @@ while running:
         
         if not logged:
             print(f"User registered as \"{username}\" dosen't exist!")
-            cmd = input(f"Do you want to register new account?[Y/n] ")
-            cmd = cmd.lower()
+            cmd = input(f"Do you want to register new account?[Y/n] ").lower()
 
             # Register
             if cmd == "y":
@@ -100,8 +94,7 @@ while running:
                         break
                     else:
                         print("Failed to create an account!")
-                        cmd = input("Try again?[ /n] ")
-                        cmd = cmd.lower()
+                        cmd = input("Try again?[ /n] ").lower()
                         if cmd == "n":
                             cmd = ""
                             break
