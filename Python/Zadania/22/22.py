@@ -1,4 +1,4 @@
-﻿# Import
+# Import
 import random
 
 ### Preparation
@@ -11,8 +11,8 @@ length = int(input("Type the length of generated password: "))
 cmd = input("Shall the letters be used only?[y/N]: ").lower()
 useLets = (cmd == 'y')
 
-cmd = input("Distincted characters ('-' to end):\n").lower()
-while not cmd == '-':
+cmd = input("Distincted characters ('--' to end):\n").lower()
+while not cmd == '--':
     if len(cmd) == 1:
         distincted.append(ord(cmd.upper()))
     else:
