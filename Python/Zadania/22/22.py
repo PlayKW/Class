@@ -20,7 +20,7 @@ while not cmd == '--':
     cmd = input()
 
 if useLets:
-    charRange = range(64, 91)
+    charRange = range(65, 91)
 else:
     charRange = range(33, 127)
 
